@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+
+  --color-ink: #0B0B11;
+  --color-paper: #FBFBFD;
+  --color-mute: #6B6B7B;
+  --color-line: #E6E6EF;
+
+  --color-violet: #7C5CFF;
+  --color-cyan: #55D6FF;
+  --color-mint: #7EF7C9;
+  --color-gold: #D6B36A;
+  --color-rose: #E11D48;
+
+  --color-identity: #4F46E5;
+  --color-knowledge: #0D9488;
+  --color-specification: #EA580C;
+  --color-toolsmcp: #0284C7;
+  --color-automation: #E11D48;
+  --color-governance: #1E3A5F;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display { font-family: var(--font-display); }
+
+.brand-gradient-text {
+  background: linear-gradient(90deg, var(--color-violet), var(--color-cyan), var(--color-mint));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-gradient-bg {
+  background: linear-gradient(90deg, var(--color-violet), var(--color-cyan), var(--color-mint));
+}
+
+@media print {
+  .no-print { display: none !important; }
+}
