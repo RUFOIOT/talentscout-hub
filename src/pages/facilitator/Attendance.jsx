@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+import { useLanguage } from "../../context/LanguageContext";
 import { useRoster, useCohortAttendance } from "../../lib/hooks";
 import { SESSIONS } from "../../data/curriculum";
 
 export default function Attendance() {
   const { user } = useAuth();
+  const { lang, t } = useLanguage();
   const { roster } = useRoster();
   const students = roster.filter((r) => r.role === "student");
   const { attendance, markAttendance } = useCohortAttendance();
@@ -26,8 +28,8 @@ export default function Attendance() {
 
   return (
     <div className="max-w-4xl mx-auto px-5 py-10">
-      <p className="text-xs uppercase tracking-widest text-mute mb-2">Facilitator</p>
-      <h1 className="font-display text-3xl md:text-4xl font-semibold mb-6">Asistencia y participación</h1>
+      <p className="text-xs uppercase tracking-widest text-mute mb-2">{t.facAttendance.eyebrow}</p>
+      <h1 className="font-display text-3xl md:text-4xl font-semibold mb-6">{t.facAttendance.title}</h1>
 
       <div className="flex gap-2 overflow-x-auto pb-2 mb-6">
         {SESSIONS.map((s) => (
@@ -38,12 +40,12 @@ export default function Attendance() {
               sessionId === s.id ? "bg-ink text-white" : "bg-white border border-line text-mute"
             }`}
           >
-            Sesión {s.id}
+            {t.facAttendance.sessionBtn} {s.id}
           </button>
         ))}
       </div>
 
-      <p className="text-sm text-mute mb-6">{session.title} · {session.date}</p>
+      <p className="text-sm text-mute mb-6">{session.title[lang]} · {session.date[lang]}</p>
 
       <div className="space-y-2">
         {students.map((st) => {
@@ -62,7 +64,7 @@ export default function Attendance() {
                   present ? "bg-mint/20 text-ink" : "bg-paper border border-line text-mute"
                 }`}
               >
-                {present ? "Presente" : "Ausente"}
+                {present ? t.facAttendance.present : t.facAttendance.absent}
               </button>
               <div className="flex items-center gap-1 shrink-0">
                 {[1, 2, 3, 4, 5].map((n) => (
@@ -80,7 +82,7 @@ export default function Attendance() {
             </div>
           );
         })}
-        {students.length === 0 && <p className="text-sm text-mute">Todavía no hay estudiantes en el roster.</p>}
+        {students.length === 0 && <p className="text-sm text-mute">{t.facAttendance.noStudents}</p>}
       </div>
     </div>
   );

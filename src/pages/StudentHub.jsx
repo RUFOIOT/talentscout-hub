@@ -1,49 +1,56 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useLanguage } from "../context/LanguageContext";
 import { useMyAttendance } from "../lib/hooks";
 import { useProgress } from "../lib/hooks";
 import { SESSIONS, COHORT } from "../data/curriculum";
+import { KNOWLEDGE_BASE_URL } from "../data/links";
 import { stackProgressPct } from "../data/achievements";
 
 export default function StudentHub() {
   const { profile } = useAuth();
+  const { lang, t } = useLanguage();
   const { attendance } = useMyAttendance();
   const { progress } = useProgress();
   const attendedCount = Object.values(attendance).filter((a) => a.present).length;
   const stackPct = stackProgressPct(progress?.stackLayers);
   const nextSession = SESSIONS.find((s) => !attendance[s.id]?.present) || SESSIONS[SESSIONS.length - 1];
+  const nextDate = nextSession.date[lang];
 
   return (
     <div className="max-w-6xl mx-auto px-5 py-10">
       <p className="text-xs uppercase tracking-widest text-mute mb-2">Talent Scout / {COHORT.name}</p>
       <h1 className="font-display text-3xl md:text-4xl font-semibold mb-2">
-        Hola, {profile?.name?.split(" ")[0]}
+        {t.hub.hello}, {profile?.name?.split(" ")[0]}
       </h1>
-      <p className="text-mute max-w-2xl mb-8">
-        Todo lo que necesitas para las ocho sesiones: qué traer, tu tarea, y dónde va tu progreso. Guarda esta página.
-      </p>
+      <p className="text-mute max-w-2xl mb-8">{t.hub.subtitle}</p>
 
       <div className="grid sm:grid-cols-3 gap-4 mb-10">
-        <StatCard label="Sesiones asistidas" value={`${attendedCount} / 8`} accent="violet" />
-        <StatCard label="Stack completo" value={`${stackPct}%`} accent="cyan" />
-        <StatCard label="Próxima sesión" value={`S${nextSession.id} · ${nextSession.date.split(",")[1]?.trim() || nextSession.date}`} accent="mint" small />
+        <StatCard label={t.hub.statSessions} value={`${attendedCount} / 8`} accent="violet" />
+        <StatCard label={t.hub.statStack} value={`${stackPct}%`} accent="cyan" />
+        <StatCard label={t.hub.statNext} value={`S${nextSession.id} · ${nextDate.split(",")[1]?.trim() || nextDate}`} accent="mint" small />
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4 mb-12">
+      <div className="grid md:grid-cols-3 gap-4 mb-12">
         <Link to="/stack" className="rounded-2xl border border-line p-6 hover:border-violet transition bg-white">
-          <p className="text-xs uppercase tracking-widest text-cyan font-semibold mb-2">El Operator Stack</p>
-          <h3 className="font-display text-xl font-semibold mb-2">Las seis capas que construyes</h3>
-          <p className="text-sm text-mute">Cada sesión suma una capa. Marca tu progreso — es la misma rúbrica del capstone.</p>
+          <p className="text-xs uppercase tracking-widest text-cyan font-semibold mb-2">{t.hub.cardStackEyebrow}</p>
+          <h3 className="font-display text-xl font-semibold mb-2">{t.hub.cardStackTitle}</h3>
+          <p className="text-sm text-mute">{t.hub.cardStackDesc}</p>
         </Link>
         <Link to="/glossary" className="rounded-2xl border border-line p-6 hover:border-violet transition bg-white">
-          <p className="text-xs uppercase tracking-widest text-violet font-semibold mb-2">Glosario</p>
-          <h3 className="font-display text-xl font-semibold mb-2">El vocabulario del cohorte</h3>
-          <p className="text-sm text-mute">21 términos, en lenguaje simple, con la sesión donde se enseña cada uno.</p>
+          <p className="text-xs uppercase tracking-widest text-violet font-semibold mb-2">{t.hub.cardGlossaryEyebrow}</p>
+          <h3 className="font-display text-xl font-semibold mb-2">{t.hub.cardGlossaryTitle}</h3>
+          <p className="text-sm text-mute">{t.hub.cardGlossaryDesc}</p>
         </Link>
+        <a href={KNOWLEDGE_BASE_URL} target="_blank" rel="noopener noreferrer" className="rounded-2xl border border-line p-6 hover:border-violet transition bg-white">
+          <p className="text-xs uppercase tracking-widest text-mint font-semibold mb-2">{t.hub.cardKbEyebrow}</p>
+          <h3 className="font-display text-xl font-semibold mb-2">{t.hub.cardKbTitle}</h3>
+          <p className="text-sm text-mute">{t.hub.cardKbDesc}</p>
+        </a>
       </div>
 
-      <h2 className="font-display text-2xl font-semibold mb-1">Todas las sesiones</h2>
-      <p className="text-sm text-mute mb-6">Haz clic en una sesión para ver qué traer, tu tarea y el material.</p>
+      <h2 className="font-display text-2xl font-semibold mb-1">{t.hub.allSessions}</h2>
+      <p className="text-sm text-mute mb-6">{t.hub.allSessionsSub}</p>
       <div className="space-y-3">
         {SESSIONS.map((s) => (
           <Link
@@ -57,11 +64,11 @@ export default function StudentHub() {
               {String(s.id).padStart(2, "0")}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[10px] uppercase tracking-widest text-mute">{s.date} · {s.time}</p>
-              <p className="font-medium truncate">{s.title}</p>
+              <p className="text-[10px] uppercase tracking-widest text-mute">{s.date[lang]} · {s.time}</p>
+              <p className="font-medium truncate">{s.title[lang]}</p>
             </div>
             {attendance[s.id]?.present && (
-              <span className="text-[10px] uppercase tracking-widest text-mint bg-mint/10 px-2 py-1 rounded-full shrink-0">Presente</span>
+              <span className="text-[10px] uppercase tracking-widest text-mint bg-mint/10 px-2 py-1 rounded-full shrink-0">{t.hub.present}</span>
             )}
           </Link>
         ))}

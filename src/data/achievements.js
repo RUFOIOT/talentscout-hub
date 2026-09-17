@@ -2,15 +2,24 @@ import { SESSIONS, STACK_LAYERS } from "./curriculum";
 
 export const SESSION_BADGES = SESSIONS.map((s) => ({
   id: `session-${s.id}`,
-  title: `Sesión ${s.id} completa`,
+  title: { en: `Session ${s.id} complete`, es: `Sesión ${s.id} completa` },
   desc: s.title,
   icon: "check",
 }));
 
 export const SPECIAL_BADGES = [
-  { id: "stack-complete", title: "Stack completo", desc: "Las 6 capas del Operator Stack marcadas.", icon: "layers" },
-  { id: "perfect-streak", title: "Racha perfecta", desc: "Asististe a las 8 sesiones del cohorte.", icon: "flame" },
-  { id: "capstone-shipped", title: "Capstone entregado", desc: "Demo en vivo de la Sesión 8 completada.", icon: "rocket" },
+  { id: "stack-complete",
+    title: { en: "Stack complete", es: "Stack completo" },
+    desc: { en: "All 6 Operator Stack layers checked off.", es: "Las 6 capas del Operator Stack marcadas." },
+    icon: "layers" },
+  { id: "perfect-streak",
+    title: { en: "Perfect streak", es: "Racha perfecta" },
+    desc: { en: "You attended all 8 sessions of the cohort.", es: "Asististe a las 8 sesiones del cohorte." },
+    icon: "flame" },
+  { id: "capstone-shipped",
+    title: { en: "Capstone shipped", es: "Capstone entregado" },
+    desc: { en: "Session 8 live demo completed.", es: "Demo en vivo de la Sesión 8 completada." },
+    icon: "rocket" },
 ];
 
 export const ALL_BADGES = [...SESSION_BADGES, ...SPECIAL_BADGES];

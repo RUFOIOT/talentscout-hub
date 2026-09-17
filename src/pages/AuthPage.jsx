@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import logo from "../logo-horizontal.png";
+import { useLanguage } from "../context/LanguageContext";
+import logo from "../logo-vibramente.jpg";
 
 export default function AuthPage() {
   const { user, profile, loading, signup, login } = useAuth();
+  const { lang, setLang, t } = useLanguage();
   const [mode, setMode] = useState("login"); // login | signup
   const [role, setRole] = useState("student");
   const [form, setForm] = useState({ name: "", email: "", password: "", code: "" });
@@ -27,7 +29,7 @@ export default function AuthPage() {
         await login({ email: form.email, password: form.password });
       }
     } catch (e2) {
-      setErr(humanizeError(e2));
+      setErr(humanizeError(e2, t.auth));
     } finally {
       setBusy(false);
     }
@@ -36,8 +38,14 @@ export default function AuthPage() {
   return (
     <div className="min-h-screen bg-ink flex items-center justify-center px-5 py-12">
       <div className="w-full max-w-md">
-        <div className="flex justify-center mb-10">
-          <img src={logo} alt="Vibramente — Talent Scout" className="h-12 w-auto" />
+        <div className="flex justify-center mb-6">
+          <img src={logo} alt="Vibramente" className="h-28 w-auto rounded-lg" />
+        </div>
+        <div className="flex justify-center mb-8">
+          <div className="flex items-center rounded-full bg-white/10 p-0.5 text-[11px] font-semibold">
+            <button type="button" onClick={() => setLang("es")} className={`px-3 py-1 rounded-full transition ${lang === "es" ? "bg-white text-ink" : "text-white/70"}`}>ES</button>
+            <button type="button" onClick={() => setLang("en")} className={`px-3 py-1 rounded-full transition ${lang === "en" ? "bg-white text-ink" : "text-white/70"}`}>EN</button>
+          </div>
         </div>
         <div className="bg-white rounded-2xl p-8 shadow-2xl shadow-violet/10">
           <div className="flex gap-1 bg-paper rounded-full p-1 mb-6">
@@ -50,16 +58,16 @@ export default function AuthPage() {
                   mode === m ? "bg-ink text-white" : "text-mute"
                 }`}
               >
-                {m === "login" ? "Entrar" : "Crear cuenta"}
+                {m === "login" ? t.auth.tabLogin : t.auth.tabSignup}
               </button>
             ))}
           </div>
 
           <h1 className="font-display text-2xl font-semibold mb-1">
-            {mode === "login" ? "Bienvenido de vuelta" : "Únete al cohorte"}
+            {mode === "login" ? t.auth.welcomeBack : t.auth.joinCohort}
           </h1>
           <p className="text-sm text-mute mb-6">
-            {mode === "login" ? "Talent Scout — AI Marketing-Operator Cohort" : "Con tu código de cohorte, como estudiante o facilitador."}
+            {mode === "login" ? "Talent Scout — AI Marketing-Operator Cohort" : t.auth.subtitleSignup}
           </p>
 
           <form onSubmit={submit} className="space-y-4">
@@ -74,18 +82,18 @@ export default function AuthPage() {
                       role === r ? "border-violet bg-violet/10 text-violet" : "border-line text-mute"
                     }`}
                   >
-                    {r === "student" ? "Estudiante" : "Facilitador"}
+                    {r === "student" ? t.auth.roleStudent : t.auth.roleFacilitator}
                   </button>
                 ))}
               </div>
             )}
             {mode === "signup" && (
-              <Field label="Nombre" value={form.name} onChange={set("name")} placeholder="Tu nombre completo" required />
+              <Field label={t.auth.fieldName} value={form.name} onChange={set("name")} placeholder={t.auth.fieldNamePlaceholder} required />
             )}
-            <Field label="Email" type="email" value={form.email} onChange={set("email")} placeholder="tu@email.com" required />
-            <Field label="Contraseña" type="password" value={form.password} onChange={set("password")} placeholder="Mínimo 6 caracteres" required minLength={6} />
+            <Field label={t.auth.fieldEmail} type="email" value={form.email} onChange={set("email")} placeholder="tu@email.com" required />
+            <Field label={t.auth.fieldPassword} type="password" value={form.password} onChange={set("password")} placeholder={t.auth.fieldPasswordPlaceholder} required minLength={6} />
             {mode === "signup" && (
-              <Field label="Código de cohorte" value={form.code} onChange={set("code")} placeholder="Ej. TS-C3-STU" required uppercase />
+              <Field label={t.auth.fieldCode} value={form.code} onChange={set("code")} placeholder={t.auth.fieldCodePlaceholder} required uppercase />
             )}
 
             {err && <p className="text-sm text-rose bg-rose/5 border border-rose/20 rounded-lg px-3 py-2">{err}</p>}
@@ -95,7 +103,7 @@ export default function AuthPage() {
               disabled={busy}
               className="w-full py-3 rounded-lg brand-gradient-bg text-ink font-semibold disabled:opacity-60"
             >
-              {busy ? "Un momento…" : mode === "login" ? "Entrar" : "Crear mi cuenta"}
+              {busy ? t.auth.busy : mode === "login" ? t.auth.submitLogin : t.auth.submitSignup}
             </button>
           </form>
         </div>
@@ -117,12 +125,12 @@ function Field({ label, uppercase, ...props }) {
   );
 }
 
-function humanizeError(e) {
+function humanizeError(e, at) {
   const msg = String(e?.message || e);
-  if (msg.includes("auth/email-already-in-use")) return "Ese email ya tiene una cuenta — prueba con Entrar.";
-  if (msg.includes("auth/invalid-credential") || msg.includes("auth/wrong-password")) return "Email o contraseña incorrectos.";
-  if (msg.includes("auth/weak-password")) return "La contraseña necesita al menos 6 caracteres.";
-  if (msg.includes("auth/user-not-found")) return "No encontramos una cuenta con ese email.";
-  if (msg.includes("código de cohorte") || msg.includes("cohorte no está")) return e.message;
-  return "Algo salió mal. Intenta de nuevo.";
+  if (msg.includes("auth/email-already-in-use")) return at.errEmailInUse;
+  if (msg.includes("auth/invalid-credential") || msg.includes("auth/wrong-password")) return at.errWrongCreds;
+  if (msg.includes("auth/weak-password")) return at.errWeakPassword;
+  if (msg.includes("auth/user-not-found")) return at.errUserNotFound;
+  if (msg.includes("auth/invalid-cohort-code")) return at.errInvalidCode;
+  return at.errGeneric;
 }

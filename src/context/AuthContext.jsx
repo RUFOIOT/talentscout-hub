@@ -3,7 +3,7 @@ import {
   createUserWithEmailAndPassword, signInWithEmailAndPassword,
   onAuthStateChanged, signOut, updateProfile,
 } from "firebase/auth";
-import { doc, setDoc, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, setDoc, onSnapshot } from "firebase/firestore";
 import { auth, db, COL, COHORT_ID } from "../lib/firebase";
 
 const AuthCtx = createContext(null);
@@ -27,19 +27,24 @@ export function AuthProvider({ children }) {
   }, [user]);
 
   async function signup({ name, email, password, code, role }) {
-    const cohortSnap = await getDoc(doc(db, COL.cohorts, COHORT_ID));
-    if (!cohortSnap.exists()) throw new Error("El cohorte no está configurado todavía.");
-    const cohort = cohortSnap.data();
-    const expected = role === "facilitator" ? cohort.facilitatorCode : cohort.studentCode;
-    if (!code || code.trim().toUpperCase() !== String(expected).toUpperCase()) {
-      throw new Error("Código de cohorte inválido. Revísalo con tu facilitador.");
-    }
+    // El código de cohorte se valida server-side: la colección
+    // talentscout_cohorts no es legible desde el cliente a propósito
+    // (para que el código de facilitador no quede expuesto), así que
+    // la propia regla de creación de talentscout_users hace el
+    // cruce con get(). Si el código no coincide, este setDoc falla
+    // con permission-denied y limpiamos la cuenta de Auth recién
+    // creada para no dejar un usuario huérfano.
     const cred = await createUserWithEmailAndPassword(auth, email, password);
-    await updateProfile(cred.user, { displayName: name });
-    await setDoc(doc(db, COL.users, cred.user.uid), {
-      uid: cred.user.uid, name, email, role, cohortId: COHORT_ID,
-      enteredCode: code.trim().toUpperCase(), createdAt: Date.now(),
-    });
+    try {
+      await updateProfile(cred.user, { displayName: name });
+      await setDoc(doc(db, COL.users, cred.user.uid), {
+        uid: cred.user.uid, name, email, role, cohortId: COHORT_ID,
+        enteredCode: (code || "").trim().toUpperCase(), createdAt: Date.now(),
+      });
+    } catch (e) {
+      await cred.user.delete().catch(() => {});
+      throw new Error("auth/invalid-cohort-code");
+    }
     return cred.user;
   }
 
