@@ -9,8 +9,8 @@ const STORAGE_KEY = "ts-hub-lang";
 function readStored() {
   try {
     const v = localStorage.getItem(STORAGE_KEY);
-    return v === "en" || v === "es" ? v : "es";
-  } catch (e) { return "es"; }
+    return v === "en" || v === "es" ? v : "en";
+  } catch (e) { return "en"; }
 }
 
 export function LanguageProvider({ children }) {
