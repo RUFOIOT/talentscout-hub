@@ -53,10 +53,12 @@ export default function Layout({ children }) {
             <div className="flex items-center rounded-full bg-white/10 p-0.5 text-[11px] font-semibold">
               <button
                 onClick={() => setLang("es")}
+                aria-pressed={lang === "es"}
                 className={`px-2 py-1 rounded-full transition ${lang === "es" ? "bg-white text-ink" : "text-white/70"}`}
               >ES</button>
               <button
                 onClick={() => setLang("en")}
+                aria-pressed={lang === "en"}
                 className={`px-2 py-1 rounded-full transition ${lang === "en" ? "bg-white text-ink" : "text-white/70"}`}
               >EN</button>
             </div>

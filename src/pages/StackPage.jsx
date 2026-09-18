@@ -3,12 +3,14 @@ import { KNOWLEDGE_BASE_URL } from "../data/links";
 import { useLanguage } from "../context/LanguageContext";
 import { useProgress } from "../lib/hooks";
 import { stackProgressPct } from "../data/achievements";
+import { StarIcon } from "../components/icons";
 
 export default function StackPage() {
   const { lang, t } = useLanguage();
   const { progress, toggleStackLayer } = useProgress();
   const layers = progress?.stackLayers || {};
   const pct = stackProgressPct(layers);
+  const allDone = pct === 100;
 
   return (
     <div className="max-w-4xl mx-auto px-5 py-10">
@@ -25,32 +27,50 @@ export default function StackPage() {
         <span className="font-display font-bold text-lg shrink-0">{pct}%</span>
       </div>
 
-      <div className="space-y-4">
-        {STACK_LAYERS.map((l) => (
-          <label
-            key={l.id}
-            className="flex items-start gap-4 rounded-2xl border border-line bg-white p-5 cursor-pointer hover:border-violet transition"
-          >
-            <input
-              type="checkbox"
-              checked={!!layers[l.id]}
-              onChange={(e) => toggleStackLayer(l.id, e.target.checked)}
-              className="mt-1.5 w-5 h-5 accent-violet shrink-0"
-            />
-            <div className="flex-1">
-              <div className="flex items-center gap-2 flex-wrap mb-1">
-                <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full text-white" style={{ background: l.color }}>
-                  {t.stack.layerLabel} {l.n}
-                </span>
-                <h3 className="font-display font-semibold">{l.name}</h3>
-                <span className="text-xs text-mute">· {l.sessionLabel[lang]} · {l.weight}% {t.stack.ofCapstone}</span>
+      <div className={`flex items-center justify-center gap-2 mb-6 text-xs font-semibold uppercase tracking-widest ${allDone ? "text-gold" : "text-line"}`}>
+        <StarIcon width={16} height={16} />
+        Capstone
+      </div>
+
+      <div className="space-y-0">
+        {STACK_LAYERS.map((l, i) => {
+          const done = !!layers[l.id];
+          const isLast = i === STACK_LAYERS.length - 1;
+          return (
+            <div key={l.id} className="flex gap-4">
+              <div className="flex flex-col items-center shrink-0 pt-5">
+                <span
+                  className="w-4 h-4 rounded-full border-2"
+                  style={{
+                    background: done ? l.color : "transparent",
+                    borderColor: l.color,
+                  }}
+                />
+                {!isLast && <span className="w-0.5 flex-1 my-1" style={{ background: "var(--color-line)", minHeight: "2.5rem" }} />}
               </div>
-              <p className="text-sm text-mute mb-2">{l.desc[lang]}</p>
-              <p className="text-xs text-ink"><b>{t.stack.takeaway}</b> {l.outcome[lang]}</p>
-              <p className="text-xs text-mute mt-1"><b>{t.stack.facilitatorLooksFor}</b> {l.look[lang]}</p>
+              <label className="flex-1 flex items-start gap-4 rounded-2xl border border-line bg-white p-5 mb-4 cursor-pointer hover:border-violet transition">
+                <input
+                  type="checkbox"
+                  checked={done}
+                  onChange={(e) => toggleStackLayer(l.id, e.target.checked)}
+                  className="mt-1.5 w-5 h-5 accent-violet shrink-0"
+                />
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 flex-wrap mb-1">
+                    <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full text-white" style={{ background: l.color }}>
+                      {t.stack.layerLabel} {l.n}
+                    </span>
+                    <h3 className="font-display font-semibold">{l.name}</h3>
+                    <span className="text-xs text-mute">· {l.sessionLabel[lang]} · {l.weight}% {t.stack.ofCapstone}</span>
+                  </div>
+                  <p className="text-sm text-mute mb-2">{l.desc[lang]}</p>
+                  <p className="text-xs text-ink"><b>{t.stack.takeaway}</b> {l.outcome[lang]}</p>
+                  <p className="text-xs text-mute mt-1"><b>{t.stack.facilitatorLooksFor}</b> {l.look[lang]}</p>
+                </div>
+              </label>
             </div>
-          </label>
-        ))}
+          );
+        })}
       </div>
 
       <a

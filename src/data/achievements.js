@@ -53,3 +53,21 @@ export function stackProgressPct(stackLayers) {
   const done = STACK_LAYERS.filter((l) => stackLayers && stackLayers[l.id]).length;
   return Math.round((done / STACK_LAYERS.length) * 100);
 }
+
+// Consecutive sessions attended, counting back from the highest-numbered
+// attended session — a real, derived number (no invented points system).
+export function currentStreak(attendance) {
+  const presentIds = new Set(
+    Object.entries(attendance || {})
+      .filter(([, v]) => v && v.present)
+      .map(([sessionId]) => Number(sessionId))
+  );
+  if (presentIds.size === 0) return 0;
+  const lastAttended = Math.max(...presentIds);
+  let streak = 0;
+  for (let id = lastAttended; id >= 1; id--) {
+    if (presentIds.has(id)) streak++;
+    else break;
+  }
+  return streak;
+}

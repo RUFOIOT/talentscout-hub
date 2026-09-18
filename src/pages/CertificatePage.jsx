@@ -17,9 +17,19 @@ export default function CertificatePage() {
 
   const dateStr = new Date().toLocaleDateString(lang === "en" ? "en-US" : "es-EC", { day: "numeric", month: "long", year: "numeric" });
 
+  const shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent("https://talentscout-hub.netlify.app/")}`;
+
   return (
     <div className="max-w-3xl mx-auto px-5 py-10">
-      <div className="no-print flex justify-end mb-4">
+      <div className="no-print flex justify-end gap-3 mb-4">
+        <a
+          href={shareUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-4 py-2 rounded-full border border-line text-sm font-semibold hover:border-violet transition"
+        >
+          {t.certificate.shareLinkedIn}
+        </a>
         <button
           onClick={() => window.print()}
           className="px-4 py-2 rounded-full brand-gradient-bg text-ink text-sm font-semibold"
@@ -29,7 +39,9 @@ export default function CertificatePage() {
       </div>
 
       <div className="rounded-2xl border-4 border-double p-10 md:p-14 text-center bg-white" style={{ borderColor: "#7C5CFF" }}>
-        <img src={logo} alt="Vibramente" className="h-16 mx-auto mb-8 rounded-lg" />
+        <div className="inline-block bg-ink rounded-lg p-2 mb-8">
+          <img src={logo} alt="Vibramente" className="h-14 mx-auto rounded" />
+        </div>
         <p className="text-xs uppercase tracking-[0.3em] text-mute mb-6">{t.certificate.certTitle}</p>
         <p className="text-sm text-mute mb-2">{t.certificate.grantedTo}</p>
         <h1 className="font-display text-4xl md:text-5xl font-bold mb-6 brand-gradient-text">{profile?.name}</h1>

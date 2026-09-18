@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { STRINGS } from "../i18n/strings";
 
 const LangCtx = createContext(null);
@@ -22,6 +22,10 @@ export function LanguageProvider({ children }) {
   }
 
   const t = STRINGS[lang];
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
 
   return (
     <LangCtx.Provider value={{ lang, setLang, t }}>

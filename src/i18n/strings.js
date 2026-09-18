@@ -63,6 +63,9 @@ export const STRINGS = {
       allSessions: "All sessions",
       allSessionsSub: "Click a session to see what to bring, your homework and the material.",
       present: "Present",
+      statStreak: "Current streak",
+      streakSessions: "sessions",
+      attendanceLabel: "Attendance",
     },
     session: {
       back: "← Student Hub",
@@ -103,6 +106,7 @@ export const STRINGS = {
       certReadyDesc: "You completed the capstone and all 6 stack layers. Click to view it.",
       certLocked: "Certificate of completion",
       certLockedDesc: "Unlocks when you attend Session 8 (capstone) and complete 100% of the Operator Stack.",
+      progressCount: "{done} of {total} badges earned",
     },
     announcements: {
       eyebrow: "Announcements",
@@ -120,13 +124,14 @@ export const STRINGS = {
     },
     certificate: {
       printBtn: "Download / Print PDF",
+      shareLinkedIn: "Share on LinkedIn",
       certTitle: "Certificate of Completion",
       grantedTo: "Awarded to",
       bodyPre: "for successfully completing the",
       bodyPost: ", building an AI agent end to end across eight sessions and demonstrating the six layers of the Operator Stack — Identity, Knowledge, Specification, Tools & MCP, Automation and Governance.",
       facilitatorLabel: "Facilitator",
       dateLabel: "Date",
-      footer: "Vibramente — School-Lab of Agentic Intelligence",
+      footer: "Vibramente — AI & Hacking School",
     },
     facAttendance: {
       eyebrow: "Facilitator",
@@ -145,6 +150,7 @@ export const STRINGS = {
       colStudent: "Student",
       colStack: "Stack",
       colCertificate: "Certificate",
+      exportCsv: "Export CSV",
     },
   },
   es: {
@@ -206,6 +212,9 @@ export const STRINGS = {
       allSessions: "Todas las sesiones",
       allSessionsSub: "Haz clic en una sesión para ver qué traer, tu tarea y el material.",
       present: "Presente",
+      statStreak: "Racha actual",
+      streakSessions: "sesiones",
+      attendanceLabel: "Asistencia",
     },
     session: {
       back: "← Student Hub",
@@ -246,6 +255,7 @@ export const STRINGS = {
       certReadyDesc: "Completaste el capstone y las 6 capas del stack. Haz clic para verlo.",
       certLocked: "Certificado de finalización",
       certLockedDesc: "Se desbloquea cuando asistes a la Sesión 8 (capstone) y completas el 100% del Operator Stack.",
+      progressCount: "{done} de {total} insignias ganadas",
     },
     announcements: {
       eyebrow: "Announcements",
@@ -263,13 +273,14 @@ export const STRINGS = {
     },
     certificate: {
       printBtn: "Descargar / Imprimir PDF",
+      shareLinkedIn: "Compartir en LinkedIn",
       certTitle: "Certificado de Finalización",
       grantedTo: "Se otorga a",
       bodyPre: "por completar exitosamente el",
       bodyPost: ", construyendo un agente de IA de principio a fin a lo largo de ocho sesiones y demostrando las seis capas del Operator Stack — Identity, Knowledge, Specification, Tools & MCP, Automation y Governance.",
       facilitatorLabel: "Facilitador",
       dateLabel: "Fecha",
-      footer: "Vibramente — School-Lab of Agentic Intelligence",
+      footer: "Vibramente — AI & Hacking School",
     },
     facAttendance: {
       eyebrow: "Facilitador",
@@ -288,6 +299,7 @@ export const STRINGS = {
       colStudent: "Estudiante",
       colStack: "Stack",
       colCertificate: "Certificado",
+      exportCsv: "Exportar CSV",
     },
   },
 };

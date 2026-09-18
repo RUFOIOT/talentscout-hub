@@ -15,6 +15,7 @@
   --color-mint: #7EF7C9;
   --color-gold: #D6B36A;
   --color-rose: #E11D48;
+  --color-amber: #F5A524;
 
   --color-identity: #4F46E5;
   --color-knowledge: #0D9488;
@@ -46,4 +47,43 @@ body {
 
 @media print {
   .no-print { display: none !important; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--color-line) 25%, #f1f0f7 37%, var(--color-line) 63%);
+  background-size: 400% 100%;
+  animation: skeleton-shimmer 1.4s ease infinite;
+}
+
+.skeleton-ring {
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  border: 3px solid var(--color-line);
+  border-top-color: var(--color-violet);
+  animation: skeleton-spin 0.8s linear infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: 0 0; }
+}
+
+@keyframes skeleton-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton { animation: none; background: var(--color-line); }
+  .skeleton-ring { animation: none; border-top-color: var(--color-line); }
+}
+
+/* Consistent, visible focus ring for keyboard navigation — the app relies
+   mostly on default UA outlines; this makes the brand ring explicit on
+   controls that override default appearance (nav pills, toggles, buttons). */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-violet);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
