@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
 import { useAnnouncements } from "../lib/hooks";
+import { SkeletonCard } from "../components/Skeleton";
 
 export default function AnnouncementsPage() {
   const { profile, user } = useAuth();
@@ -53,7 +54,7 @@ export default function AnnouncementsPage() {
         </form>
       )}
 
-      {loading && <p className="text-sm text-mute">{t.announcements.loading}</p>}
+      {loading && <div className="space-y-3 mb-4"><SkeletonCard /><SkeletonCard /></div>}
       {!loading && posts.length === 0 && <p className="text-sm text-mute">{t.announcements.none}</p>}
       <div className="space-y-4">
         {posts.map((p) => (

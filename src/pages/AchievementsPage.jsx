@@ -2,10 +2,7 @@ import { Link } from "react-router-dom";
 import { useMyAttendance, useProgress } from "../lib/hooks";
 import { ALL_BADGES, computeAchievements, certificateEligible } from "../data/achievements";
 import { useLanguage } from "../context/LanguageContext";
-
-const ICONS = {
-  check: "✓", layers: "▤", flame: "🔥", rocket: "🚀",
-};
+import { BadgeIcon } from "../components/icons";
 
 export default function AchievementsPage() {
   const { lang, t } = useLanguage();
@@ -18,7 +15,10 @@ export default function AchievementsPage() {
     <div className="max-w-4xl mx-auto px-5 py-10">
       <p className="text-xs uppercase tracking-widest text-mute mb-2">{t.achievements.eyebrow}</p>
       <h1 className="font-display text-3xl md:text-4xl font-semibold mb-2">{t.achievements.title}</h1>
-      <p className="text-mute mb-8">{t.achievements.subtitle}</p>
+      <p className="text-mute mb-1">{t.achievements.subtitle}</p>
+      <p className="text-xs font-semibold text-violet mb-8">
+        {t.achievements.progressCount.replace("{done}", unlocked.size).replace("{total}", ALL_BADGES.length)}
+      </p>
 
       {eligible ? (
         <Link to="/certificate" className="block rounded-2xl brand-gradient-bg p-6 mb-10 text-ink">
@@ -43,11 +43,11 @@ export default function AchievementsPage() {
               }`}
             >
               <div
-                className={`w-14 h-14 rounded-full mx-auto mb-3 flex items-center justify-center text-2xl ${
-                  on ? "brand-gradient-bg" : "bg-line"
+                className={`w-14 h-14 rounded-full mx-auto mb-3 flex items-center justify-center ${
+                  on ? "brand-gradient-bg text-ink" : "bg-line text-mute"
                 }`}
               >
-                {ICONS[b.icon] || "★"}
+                <BadgeIcon icon={b.icon} width={22} height={22} />
               </div>
               <p className="font-display font-semibold text-sm mb-1">{b.title[lang]}</p>
               <p className="text-xs text-mute">{b.desc[lang]}</p>

@@ -60,6 +60,7 @@ export default function Attendance() {
               </div>
               <button
                 onClick={() => setPresent(st.uid, !present)}
+                aria-pressed={present}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold shrink-0 ${
                   present ? "bg-mint/20 text-ink" : "bg-paper border border-line text-mute"
                 }`}

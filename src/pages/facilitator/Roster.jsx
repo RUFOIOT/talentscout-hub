@@ -2,6 +2,8 @@ import { useRoster, useCohortAttendance, useAllProgress } from "../../lib/hooks"
 import { SESSIONS } from "../../data/curriculum";
 import { stackProgressPct, certificateEligible } from "../../data/achievements";
 import { useLanguage } from "../../context/LanguageContext";
+import { SkeletonRow } from "../../components/Skeleton";
+import { DownloadIcon } from "../../components/icons";
 
 export default function Roster() {
   const { t } = useLanguage();
@@ -17,13 +19,53 @@ export default function Roster() {
     attByUid[a.uid][a.sessionId] = a;
   });
 
+  function exportCsv() {
+    const header = ["Name", "Email", ...SESSIONS.map((s) => `S${s.id}`), "Stack %", "Certificate"];
+    const rows = students.map((st) => {
+      const att = attByUid[st.uid] || {};
+      const prog = progressByUid[st.uid];
+      const pct = stackProgressPct(prog?.stackLayers);
+      const eligible = certificateEligible({ attendance: att, stackLayers: prog?.stackLayers });
+      return [
+        st.name, st.email,
+        ...SESSIONS.map((s) => (att[s.id]?.present ? "present" : "absent")),
+        `${pct}%`, eligible ? "eligible" : "not yet",
+      ];
+    });
+    const csv = [header, ...rows]
+      .map((r) => r.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(","))
+      .join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "talent-scout-roster.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <div className="max-w-6xl mx-auto px-5 py-10">
-      <p className="text-xs uppercase tracking-widest text-mute mb-2">{t.facRoster.eyebrow}</p>
+      <div className="flex items-start justify-between gap-4 mb-2">
+        <p className="text-xs uppercase tracking-widest text-mute">{t.facRoster.eyebrow}</p>
+        {!loading && students.length > 0 && (
+          <button
+            onClick={exportCsv}
+            className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border border-line hover:border-violet transition shrink-0"
+          >
+            <DownloadIcon width={14} height={14} />
+            {t.facRoster.exportCsv}
+          </button>
+        )}
+      </div>
       <h1 className="font-display text-3xl md:text-4xl font-semibold mb-2">{t.facRoster.title}</h1>
       <p className="text-mute mb-8">{students.length} {t.facRoster.subtitleEnrolled}</p>
 
-      {loading && <p className="text-sm text-mute">{t.facRoster.loading}</p>}
+      {loading && (
+        <div className="space-y-2 mb-4">
+          <SkeletonRow /><SkeletonRow /><SkeletonRow />
+        </div>
+      )}
       {!loading && students.length === 0 && (
         <p className="text-sm text-mute">{t.facRoster.noStudents}</p>
       )}

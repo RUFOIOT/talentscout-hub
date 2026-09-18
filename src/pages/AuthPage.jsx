@@ -43,8 +43,8 @@ export default function AuthPage() {
         </div>
         <div className="flex justify-center mb-8">
           <div className="flex items-center rounded-full bg-white/10 p-0.5 text-[11px] font-semibold">
-            <button type="button" onClick={() => setLang("es")} className={`px-3 py-1 rounded-full transition ${lang === "es" ? "bg-white text-ink" : "text-white/70"}`}>ES</button>
-            <button type="button" onClick={() => setLang("en")} className={`px-3 py-1 rounded-full transition ${lang === "en" ? "bg-white text-ink" : "text-white/70"}`}>EN</button>
+            <button type="button" onClick={() => setLang("es")} aria-pressed={lang === "es"} className={`px-3 py-1 rounded-full transition ${lang === "es" ? "bg-white text-ink" : "text-white/70"}`}>ES</button>
+            <button type="button" onClick={() => setLang("en")} aria-pressed={lang === "en"} className={`px-3 py-1 rounded-full transition ${lang === "en" ? "bg-white text-ink" : "text-white/70"}`}>EN</button>
           </div>
         </div>
         <div className="bg-white rounded-2xl p-8 shadow-2xl shadow-violet/10">
